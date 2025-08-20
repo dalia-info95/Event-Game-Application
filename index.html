@@ -1,78 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>AUD Library Quest - Stage 1</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color:
-#F4F4F4;
-      text-align: center;
-      padding: 20px;
-      color:
-#264785;
-    }
-    .logo {
-      width: 300px;
-      margin: 20px auto;
-    }
-    video {
-      width: 90%;
-      max-width: 720px;
-      border: 5px solid
-#264785;
-      border-radius: 15px;
-      margin-bottom: 20px;
-    }
-    .question-section,
-    .code-section {
-      display: none;
-      margin-top: 30px;
-    }
-    button {
-      background-color:
-#FFC70A;
-      color: #000;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 10px 5px;
-    }
-    button:hover {
-      background-color:
-#EB2127;
-      color: #fff;
-    }
-    .correct {
-      color:
-#0F98BA;
-      font-weight: bold;
-      font-size: 20px;
-    }
-    .wrong {
-      color:
-#EB2127;
-      font-weight: bold;
-    }
-    .code-section {
-      font-size: 22px;
-      color:
-#9957A3;
-    }
+    body { font-family: Arial, sans-serif; background:#F4F4F4; text-align:center; padding:20px; color:#264785; }
+    .logo { width:300px; margin:20px auto; }
+    video { width:90%; max-width:720px; border:5px solid #264785; border-radius:15px; margin-bottom:20px; }
+    .question-section, .code-section { display:none; margin-top:30px; }
+    button { background:#FFC70A; color:#000; padding:12px 24px; border:none; border-radius:10px; font-size:16px; cursor:pointer; margin:10px 5px; }
+    button:hover { background:#EB2127; color:#fff; }
+    .correct { color:#0F98BA; font-weight:bold; font-size:20px; }
+    .wrong { color:#EB2127; font-weight:bold; }
+    .code-section { font-size:22px; color:#9957A3; }
+    #err { color:#EB2127; font-weight:bold; display:none; }
   </style>
 </head>
 <body>
-  <img src="Logo.png" alt="AUD Library Logo" class="logo">
+
+  <!-- If your logo file is /assets/Logo.png, keep this path; otherwise use "Logo.png" -->
+  <img src="assets/Logo.png" alt="AUD Library Logo" class="logo" />
+
   <h1>Welcome to the AUD Library Quest!</h1>
   <p>Please watch the full video to begin your journey.</p>
-  <!-- Embed your local video file -->
-  <video id="introVideo" controls onended="videoEnded()" onplay="preventSkip()" onpause="preventPause()" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback">
-    <source src="Video.mp4" type="video/mp4">
+
+  <video id="introVideo"
+         controls
+         preload="metadata"
+         playsinline
+         poster="assets/poster.jpg"
+         onended="videoEnded()"
+         <!-- Temporarily disable these while testing:
+         onplay="preventSkip()"
+         onpause="preventPause()"
+         -->
+         disablePictureInPicture
+         controlsList="nodownload noremoteplayback">
+    <!-- Update this path to exactly where your file lives -->
+    <source src="assets/Video.mp4?v=1" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
+
+  <p id="err">⚠️ We couldn’t load the video. Check the file path/name and try again.</p>
+
   <div id="message" class="question-section">
     <p>✅ <strong>Thank you for watching the video. Now the hunting begins!</strong></p>
     <p><strong>Question:</strong> Does the library open on Sunday?</p>
@@ -80,42 +50,48 @@
     <button onclick="checkAnswer('no')">No</button>
     <p id="feedback"></p>
   </div>
+
   <div id="codeReveal" class="code-section">
-    🎉 <span class="correct">Good job!</span><br>
-    Your Stage 1 code is: <strong>"i"</strong><br>
+    🎉 <span class="correct">Good job!</span><br />
+    Your Stage 1 code is: <strong>"i"</strong><br />
     ✏️ Write it down or memorize it for the final challenge!
   </div>
+
   <script>
-    const video = document.getElementById("introVideo");
+    const video = document.getElementById('introVideo');
+
+    // Show a helpful message if the source can't be loaded
+    video.addEventListener('error', () => {
+      document.getElementById('err').style.display = 'block';
+    });
+
     function preventSkip() {
-      video.currentTime = 0; // Resets video if skipped
+      // Commented out while testing; re-enable later if you must enforce no-scrub
+      // video.currentTime = 0;
     }
+
     function preventPause() {
-      if (!video.ended) {
-        video.play(); // Prevent pause
-      }
+      // Commented out while testing
+      // if (!video.ended) video.play();
     }
+
     function videoEnded() {
       document.getElementById('message').style.display = 'block';
     }
+
     function checkAnswer(choice) {
       const feedback = document.getElementById('feedback');
       const codeSection = document.getElementById('codeReveal');
       if (choice === 'no') {
-        feedback.innerHTML = "✅ Correct!";
+        feedback.textContent = "✅ Correct!";
         feedback.className = 'correct';
         codeSection.style.display = 'block';
       } else {
-        feedback.innerHTML = "❌ Incorrect. Try again.";
+        feedback.textContent = "❌ Incorrect. Try again.";
         feedback.className = 'wrong';
         codeSection.style.display = 'none';
       }
     }
   </script>
 </body>
-
 </html>
-
-
-
-
