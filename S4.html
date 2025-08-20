@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Info Desk Challenge - Stage 4</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F4F4F4;
+      text-align: center;
+      padding: 20px;
+      color: #264785;
+    }
+    .logo {
+      width: 300px;
+      margin: 20px auto;
+    }
+    .card {
+      background-color: white;
+      border: 5px solid #264785;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #9957A3;
+      margin-bottom: 20px;
+    }
+    .riddle {
+      font-style: italic;
+      font-size: 18px;
+      line-height: 1.5;
+      margin: 20px 0;
+      color: #264785;
+    }
+    .task {
+      background-color: #F0F8FF;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 5px solid #0F98BA;
+    }
+    .question-section {
+      margin-top: 30px;
+    }
+    .checkbox-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .checkbox-item {
+      background-color: white;
+      border: 2px solid #264785;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 80%;
+      max-width: 500px;
+      text-align: left;
+    }
+    .checkbox-item:hover {
+      background-color: #F0F8FF;
+      border-color: #0F98BA;
+    }
+    .checkbox-item input {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    .checkbox-item.selected {
+      background-color: #FFC70A;
+      border-color: #EB2127;
+    }
+    button {
+      background-color: #FFC70A;
+      color: #000;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 20px 5px;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #EB2127;
+      color: #fff;
+    }
+    button:disabled {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+    .correct {
+      color: #0F98BA;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .wrong {
+      color: #EB2127;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .code-section {
+      font-size: 22px;
+      color: #9957A3;
+      display: none;
+      margin-top: 20px;
+      background-color: #E8F5E8;
+      padding: 20px;
+      border-radius: 10px;
+      border: 3px solid #0F98BA;
+    }
+    .attempts-left {
+      color: #EB2127;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <img src="Logo (1).png" alt="AUD Library Logo" class="logo">
+  <h1>Info Desk Challenge - Stage 4</h1>
+
+  <div class="card">
+    <div class="card-title">🗣️ Ask and You Shall Advance</div>
+
+    <div class="riddle">
+      "You ask, we answer—it's what we do,<br>
+      Need citation help or database clue?<br>
+      Approach the desk and ask this line:<br>
+      'How do I find a peer-reviewed article on design?'"
+    </div>
+
+    <div class="task">
+      <strong>Info Desk Challenge</strong><br>
+      Select the correct answers for finding peer-reviewed articles.
+    </div>
+
+    <div class="question-section">
+      <p><strong>How do you find a peer-reviewed article on design?</strong> (Select all correct answers)</p>
+
+      <div class="checkbox-container">
+        <label class="checkbox-item">
+          <input type="checkbox" value="databases" onchange="updateSelection(this)">
+          Use the library's databases (e.g., EBSCOhost, ProQuest, JSTOR)
+        </label>
+
+        <label class="checkbox-item">
+          <input type="checkbox" value="filter" onchange="updateSelection(this)">
+          Use the "Peer-Reviewed" filter
+        </label>
+
+        <label class="checkbox-item">
+          <input type="checkbox" value="google" onchange="updateSelection(this)">
+          Look on Google Images
+        </label>
+
+        <label class="checkbox-item">
+          <input type="checkbox" value="chatgpt" onchange="updateSelection(this)">
+          Ask ChatGPT
+        </label>
+      </div>
+
+      <button onclick="checkAnswers()" id="submitBtn">Submit Answers</button>
+      <p id="feedback"></p>
+      <p id="attemptsLeft" class="attempts-left"></p>
+    </div>
+  </div>
+
+  <div id="codeReveal" class="code-section">
+    🎉 <span class="correct">Excellent work!</span><br>
+    Your Stage 4 code is: <strong>"perf"</strong><br>
+    ✏️ Write it down or memorize it for the final challenge!
+  </div>
+
+  <script>
+    let attempts = 0;
+    const maxAttempts = 2;
+    let selectedAnswers = [];
+
+    function updateSelection(checkbox) {
+      const item = checkbox.parentElement;
+      const value = checkbox.value;
+
+      if (checkbox.checked) {
+        item.classList.add('selected');
+        if (!selectedAnswers.includes(value)) {
+          selectedAnswers.push(value);
+        }
+      } else {
+        item.classList.remove('selected');
+        selectedAnswers = selectedAnswers.filter(answer => answer !== value);
+      }
+    }
+
+    function checkAnswers() {
+      const feedback = document.getElementById('feedback');
+      const codeSection = document.getElementById('codeReveal');
+      const attemptsLeft = document.getElementById('attemptsLeft');
+      const submitBtn = document.getElementById('submitBtn');
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+      attempts++;
+
+      const correctAnswers = ['databases', 'filter'];
+      const wrongAnswers = ['google', 'chatgpt'];
+
+      // Check if both correct answers are selected and no wrong answers
+      const hasAllCorrect = correctAnswers.every(answer => selectedAnswers.includes(answer));
+      const hasAnyWrong = wrongAnswers.some(answer => selectedAnswers.includes(answer));
+
+      if (hasAllCorrect && !hasAnyWrong && selectedAnswers.length === 2) {
+        feedback.innerHTML = "✅ Correct!";
+        feedback.className = 'correct';
+        codeSection.style.display = 'block';
+        attemptsLeft.innerHTML = '';
+        // Disable all checkboxes and submit button after correct answer
+        checkboxes.forEach(cb => cb.disabled = true);
+        submitBtn.disabled = true;
+      } else {
+        if (attempts === 1) {
+          feedback.innerHTML = "❌ Incorrect. Try again.";
+          feedback.className = 'wrong';
+          attemptsLeft.innerHTML = "1 remaining attempt";
+        } else {
+          feedback.innerHTML = "❌ Sorry, try your chance again :(";
+          feedback.className = 'wrong';
+          attemptsLeft.innerHTML = '';
+          codeSection.style.display = 'none';
+          // Disable all checkboxes and submit button after max attempts
+          checkboxes.forEach(cb => cb.disabled = true);
+          submitBtn.disabled = true;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
