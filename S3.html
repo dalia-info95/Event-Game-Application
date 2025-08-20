@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Zone Clue - Stage 3</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F4F4F4;
+      text-align: center;
+      padding: 20px;
+      color: #264785;
+    }
+    .logo {
+      width: 300px;
+      margin: 20px auto;
+    }
+    .card {
+      background-color: white;
+      border: 5px solid #264785;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #9957A3;
+      margin-bottom: 20px;
+    }
+    .riddle {
+      font-style: italic;
+      font-size: 18px;
+      line-height: 1.5;
+      margin: 20px 0;
+      color: #264785;
+    }
+    .task {
+      background-color: #F0F8FF;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 5px solid #0F98BA;
+    }
+    .question-section {
+      margin-top: 30px;
+    }
+    button {
+      background-color: #FFC70A;
+      color: #000;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 5px;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #EB2127;
+      color: #fff;
+    }
+    button:disabled {
+      background-color: #ccc;
+      color: #666;
+      cursor: not-allowed;
+    }
+    .correct {
+      color: #0F98BA;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .wrong {
+      color: #EB2127;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .code-section {
+      font-size: 22px;
+      color: #9957A3;
+      display: none;
+      margin-top: 20px;
+      background-color: #E8F5E8;
+      padding: 20px;
+      border-radius: 10px;
+      border: 3px solid #0F98BA;
+    }
+    .attempts-left {
+      color: #EB2127;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <img src="Logo (1).png" alt="AUD Library Logo" class="logo">
+  <h1>Study Zone Clue - Stage 3</h1>
+
+  <div class="card">
+    <div class="card-title">🔍 Find the Silent Circle</div>
+
+    <div class="riddle">
+      "I'm where minds can learn in peace,<br>
+      A circle of thought where noises cease.<br>
+      Find the chair of calm release,<br>
+      Its secret word is ___"
+    </div>
+
+    <div class="task">
+      <strong>The Knowledge Vault – Study Zones (Reference Shelves)</strong><br>
+      Complete the riddle by finding the missing word.
+    </div>
+
+    <div class="question-section">
+      <p><strong>The secret word is:</strong></p>
+      <button onclick="checkAnswer('study')" id="btn1">STUDY</button>
+      <button onclick="checkAnswer('peace')" id="btn2">PEACE</button>
+      <button onclick="checkAnswer('piece')" id="btn3">PIECE</button>
+      <p id="feedback"></p>
+      <p id="attemptsLeft" class="attempts-left"></p>
+    </div>
+  </div>
+
+  <div id="codeReveal" class="code-section">
+    🎉 <span class="correct">Excellent work!</span><br>
+    Your Stage 3 code is: <strong>"it"</strong><br>
+    ✏️ Write it down or memorize it for the final challenge!
+  </div>
+
+  <script>
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    function checkAnswer(choice) {
+      const feedback = document.getElementById('feedback');
+      const codeSection = document.getElementById('codeReveal');
+      const attemptsLeft = document.getElementById('attemptsLeft');
+      const buttons = document.querySelectorAll('button');
+
+      attempts++;
+
+      if (choice === 'peace') {
+        feedback.innerHTML = "✅ Correct!";
+        feedback.className = 'correct';
+        codeSection.style.display = 'block';
+        attemptsLeft.innerHTML = '';
+        // Disable all buttons after correct answer
+        buttons.forEach(btn => btn.disabled = true);
+      } else {
+        if (attempts === 1) {
+          feedback.innerHTML = "❌ Incorrect. Try again.";
+          feedback.className = 'wrong';
+          attemptsLeft.innerHTML = "1 remaining attempt";
+        } else {
+          feedback.innerHTML = "❌ Sorry, try your chance again :(";
+          feedback.className = 'wrong';
+          attemptsLeft.innerHTML = '';
+          codeSection.style.display = 'none';
+          // Disable all buttons after max attempts
+          buttons.forEach(btn => btn.disabled = true);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
