@@ -6,12 +6,10 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color:
-#F4F4F4;
+      background-color: #F4F4F4;
       text-align: center;
       padding: 20px;
-      color:
-#264785;
+      color: #264785;
     }
     .logo {
       width: 300px;
@@ -20,8 +18,7 @@
     video {
       width: 90%;
       max-width: 720px;
-      border: 5px solid
-#264785;
+      border: 5px solid #264785;
       border-radius: 15px;
       margin-bottom: 20px;
     }
@@ -30,9 +27,14 @@
       display: none;
       margin-top: 30px;
     }
+    .question-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #264785;
+      margin: 20px 0;
+    }
     button {
-      background-color:
-#FFC70A;
+      background-color: #FFC70A;
       color: #000;
       padding: 12px 24px;
       border: none;
@@ -42,25 +44,32 @@
       margin: 10px 5px;
     }
     button:hover {
-      background-color:
-#EB2127;
+      background-color: #EB2127;
       color: #fff;
     }
     .correct {
-      color:
-#0F98BA;
+      color: #0F98BA;
       font-weight: bold;
       font-size: 20px;
     }
     .wrong {
-      color:
-#EB2127;
+      color: #EB2127;
       font-weight: bold;
     }
     .code-section {
-      font-size: 22px;
-      color:
-#9957A3;
+      font-size: 28px;
+      color: #9957A3;
+      font-weight: bold;
+    }
+    .master-code {
+      font-size: 32px;
+      color: #264785;
+      background-color: #FFC70A;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -75,15 +84,15 @@
   </video>
   <div id="message" class="question-section">
     <p>✅ <strong>Thank you for watching the video. Now the hunting begins!</strong></p>
-    <p><strong>Question:</strong> Does the library open on Sunday?</p>
+    <p class="question-text">Question: Does the library open on Sunday?</p>
     <button onclick="checkAnswer('yes')">Yes</button>
     <button onclick="checkAnswer('no')">No</button>
     <p id="feedback"></p>
   </div>
   <div id="codeReveal" class="code-section">
-    🎉 <span class="correct">Good job!</span><br>
-    Your Stage 1 code is: <strong>"i"</strong><br>
-    ✏️ Write it down or memorize it for the final challenge!
+    🎉 <span class="correct">Good job!</span><br><br>
+    <div class="master-code">Your Stage 1 code is: i</div>
+    <br>✏️ Write it down or memorize it for the final challenge!
   </div>
   <script>
     const video = document.getElementById("introVideo");
@@ -113,10 +122,4 @@
     }
   </script>
 </body>
-
-</html> 
-
-
-
- 
-
+</html>
