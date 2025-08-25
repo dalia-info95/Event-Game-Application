@@ -47,13 +47,13 @@
     .question-section {
       margin-top: 30px;
     }
-    .checkbox-container {
+    .radio-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 20px 0;
     }
-    .checkbox-item {
+    .radio-item {
       background-color: white;
       border: 2px solid #264785;
       border-radius: 8px;
@@ -65,15 +65,15 @@
       max-width: 500px;
       text-align: left;
     }
-    .checkbox-item:hover {
+    .radio-item:hover {
       background-color: #F0F8FF;
       border-color: #0F98BA;
     }
-    .checkbox-item input {
+    .radio-item input {
       margin-right: 10px;
       transform: scale(1.2);
     }
-    .checkbox-item.selected {
+    .radio-item.selected {
       background-color: #FFC70A;
       border-color: #EB2127;
     }
@@ -108,7 +108,7 @@
       font-size: 18px;
     }
     .code-section {
-      font-size: 22px;
+      font-size: 28px;
       color: #9957A3;
       display: none;
       margin-top: 20px;
@@ -116,12 +116,29 @@
       padding: 20px;
       border-radius: 10px;
       border: 3px solid #0F98BA;
+      font-weight: bold;
+    }
+    .master-code {
+      font-size: 32px;
+      color: #264785;
+      background-color: #FFC70A;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px auto;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     .attempts-left {
       color: #EB2127;
       font-weight: bold;
       font-size: 16px;
       margin-top: 10px;
+    }
+    .question-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: #264785;
+      margin: 20px 0;
     }
   </style>
 </head>
@@ -140,90 +157,81 @@
     </div>
 
     <div class="task">
-      <strong>Info Desk Challenge</strong><br>
-      Select the correct answers for finding peer-reviewed articles.
+      <strong>Task: Select the correct answer for finding peer-reviewed articles.</strong>
     </div>
 
     <div class="question-section">
-      <p><strong>How do you find a peer-reviewed article on design?</strong> (Select all correct answers)</p>
+      <p class="question-text">How do you find a peer-reviewed article on design?</p>
 
-      <div class="checkbox-container">
-        <label class="checkbox-item">
-          <input type="checkbox" value="databases" onchange="updateSelection(this)">
+      <div class="radio-container">
+        <label class="radio-item">
+          <input type="radio" name="answer" value="databases" onchange="updateSelection(this)">
           Use the library's databases (e.g., EBSCOhost, ProQuest, JSTOR)
         </label>
 
-        <label class="checkbox-item">
-          <input type="checkbox" value="filter" onchange="updateSelection(this)">
-          Use the "Peer-Reviewed" filter
-        </label>
-
-        <label class="checkbox-item">
-          <input type="checkbox" value="google" onchange="updateSelection(this)">
+        <label class="radio-item">
+          <input type="radio" name="answer" value="google" onchange="updateSelection(this)">
           Look on Google Images
         </label>
 
-        <label class="checkbox-item">
-          <input type="checkbox" value="chatgpt" onchange="updateSelection(this)">
+        <label class="radio-item">
+          <input type="radio" name="answer" value="chatgpt" onchange="updateSelection(this)">
           Ask ChatGPT
         </label>
       </div>
 
-      <button onclick="checkAnswers()" id="submitBtn">Submit Answers</button>
+      <button onclick="checkAnswer()" id="submitBtn">Submit Answer</button>
       <p id="feedback"></p>
       <p id="attemptsLeft" class="attempts-left"></p>
     </div>
   </div>
 
   <div id="codeReveal" class="code-section">
-    🎉 <span class="correct">Excellent work!</span><br>
-    Your Stage 4 code is: <strong>"perf"</strong><br>
-    ✏️ Write it down or memorize it for the final challenge!
+    🎉 <span class="correct">Excellent work!</span><br><br>
+    <div class="master-code"><strong>Your Stage 4 code is: perf<strong></div>
+    <br>✏️ Write it down or memorize it for the final challenge!
   </div>
 
   <script>
     let attempts = 0;
     const maxAttempts = 2;
-    let selectedAnswers = [];
+    let selectedAnswer = '';
 
-    function updateSelection(checkbox) {
-      const item = checkbox.parentElement;
-      const value = checkbox.value;
-
-      if (checkbox.checked) {
-        item.classList.add('selected');
-        if (!selectedAnswers.includes(value)) {
-          selectedAnswers.push(value);
-        }
-      } else {
+    function updateSelection(radio) {
+      // Remove selected class from all items
+      document.querySelectorAll('.radio-item').forEach(item => {
         item.classList.remove('selected');
-        selectedAnswers = selectedAnswers.filter(answer => answer !== value);
-      }
+      });
+      
+      // Add selected class to current item
+      radio.parentElement.classList.add('selected');
+      selectedAnswer = radio.value;
     }
 
-    function checkAnswers() {
+    function checkAnswer() {
       const feedback = document.getElementById('feedback');
       const codeSection = document.getElementById('codeReveal');
       const attemptsLeft = document.getElementById('attemptsLeft');
       const submitBtn = document.getElementById('submitBtn');
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const radios = document.querySelectorAll('input[type="radio"]');
+
+      if (!selectedAnswer) {
+        feedback.innerHTML = "❌ Please select an answer first.";
+        feedback.className = 'wrong';
+        return;
+      }
 
       attempts++;
 
-      const correctAnswers = ['databases', 'filter'];
-      const wrongAnswers = ['google', 'chatgpt'];
+      const correctAnswer = 'databases';
 
-      // Check if both correct answers are selected and no wrong answers
-      const hasAllCorrect = correctAnswers.every(answer => selectedAnswers.includes(answer));
-      const hasAnyWrong = wrongAnswers.some(answer => selectedAnswers.includes(answer));
-
-      if (hasAllCorrect && !hasAnyWrong && selectedAnswers.length === 2) {
+      if (selectedAnswer === correctAnswer) {
         feedback.innerHTML = "✅ Correct!";
         feedback.className = 'correct';
         codeSection.style.display = 'block';
         attemptsLeft.innerHTML = '';
-        // Disable all checkboxes and submit button after correct answer
-        checkboxes.forEach(cb => cb.disabled = true);
+        // Disable all radios and submit button after correct answer
+        radios.forEach(radio => radio.disabled = true);
         submitBtn.disabled = true;
       } else {
         if (attempts === 1) {
@@ -235,8 +243,8 @@
           feedback.className = 'wrong';
           attemptsLeft.innerHTML = '';
           codeSection.style.display = 'none';
-          // Disable all checkboxes and submit button after max attempts
-          checkboxes.forEach(cb => cb.disabled = true);
+          // Disable all radios and submit button after max attempts
+          radios.forEach(radio => radio.disabled = true);
           submitBtn.disabled = true;
         }
       }
