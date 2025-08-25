@@ -47,35 +47,12 @@
     .question-section {
       margin-top: 30px;
     }
-    .checkbox-container {
+    .options {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 20px 0;
-    }
-    .checkbox-item {
-      background-color: white;
-      border: 2px solid #264785;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 8px 0;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 80%;
-      max-width: 500px;
-      text-align: left;
-    }
-    .checkbox-item:hover {
-      background-color: #F0F8FF;
-      border-color: #0F98BA;
-    }
-    .checkbox-item input {
-      margin-right: 10px;
-      transform: scale(1.2);
-    }
-    .checkbox-item.selected {
-      background-color: #FFC70A;
-      border-color: #EB2127;
+      gap: 10px;
+      margin: 10px 0 0;
     }
     button {
       background-color: #FFC70A;
@@ -85,7 +62,7 @@
       border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      margin: 20px 5px;
+      margin: 10px 5px;
       transition: all 0.3s ease;
     }
     button:hover {
@@ -96,6 +73,11 @@
       background-color: #ccc;
       color: #666;
       cursor: not-allowed;
+    }
+    /* Highlight the selected option */
+    .option.selected {
+      outline: 3px solid #EB2127;
+      transform: scale(1.02);
     }
     .correct {
       color: #0F98BA;
@@ -146,26 +128,27 @@
     <div class="card-title">🕵️ The Digital Detective</div>
 
     <div class="riddle">
-    I am a digital storyteller, wise and grand,
-I can write poems and explain the land.
-But my memory is a web, both true and untrue,
-So you must always check my stories through.
-What am I?
+      I am a digital storyteller, wise and grand,<br>
+      I can write poems and explain the land.<br>
+      But my memory is a web, both true and untrue,<br>
+      So you must always check my stories through.<br>
+      <strong>What am I?</strong>
     </div>
 
     <div class="task">
-      <strong> Task: Answer the final question to reveal the master code and signal game completion.</strong>
+      <strong>Task:</strong> Answer the final question to reveal the master code and signal game completion.
     </div>
 
     <div class="question-section">
-      <p><strong> Choose the best digital storyteller:</strong></p>
+      <p><strong>Choose the best digital storyteller:</strong></p>
 
       <div class="options">
-            <button class="option" data-answer="google">A) Google</button>
-            <button class="option" data-answer="chatgpt">B) ChatGPT</button>
-            <button class="option" data-answer="grandparents">C) My grandparents</button>
-        </div>
-      <button onclick="checkAnswers()" id="submitBtn">Submit Answers</button>
+        <button type="button" class="option" data-answer="google">A) Google</button>
+        <button type="button" class="option" data-answer="chatgpt">B) ChatGPT</button>
+        <button type="button" class="option" data-answer="grandparents">C) My grandparents</button>
+      </div>
+
+      <button type="button" onclick="checkAnswers()" id="submitBtn">Submit Answer</button>
       <p id="feedback"></p>
       <p id="attemptsLeft" class="attempts-left"></p>
     </div>
@@ -173,7 +156,7 @@ What am I?
 
   <div id="codeReveal" class="code-section">
     🎉 <span class="correct">ChatGPT</span><br>
-    <strong>Your Stage 5 code is:"ectly"</strong><br>
+    <strong>Your Stage 5 code is: "<span class="code-fragment">ectly</span>"</strong><br>
     ✏️ Write it down or memorize it for the final challenge!
   </div>
 
@@ -190,67 +173,63 @@ What am I?
   <script>
     let attempts = 0;
     const maxAttempts = 2;
-    let selectedAnswers = [];
+    let selectedAnswer = null;
 
-    function updateSelection(checkbox) {
-      const item = checkbox.parentElement;
-      const value = checkbox.value;
+    const optionButtons = document.querySelectorAll('.option');
+    const feedback = document.getElementById('feedback');
+    const codeSection = document.getElementById('codeReveal');
+    const gameCompletion = document.getElementById('gameCompletion');
+    const attemptsLeft = document.getElementById('attemptsLeft');
+    const submitBtn = document.getElementById('submitBtn');
 
-      if (checkbox.checked) {
-        item.classList.add('selected');
-        if (!selectedAnswers.includes(value)) {
-          selectedAnswers.push(value);
-        }
-      } else {
-        item.classList.remove('selected');
-        selectedAnswers = selectedAnswers.filter(answer => answer !== value);
-      }
+    // Handle selecting an option
+    optionButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        optionButtons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedAnswer = btn.dataset.answer; // 'google' | 'chatgpt' | 'grandparents'
+        feedback.textContent = '';
+        attemptsLeft.textContent = '';
+      });
+    });
+
+    function disableAll() {
+      optionButtons.forEach(b => b.disabled = true);
+      submitBtn.disabled = true;
     }
 
     function checkAnswers() {
-      const feedback = document.getElementById('feedback');
-      const codeSection = document.getElementById('codeReveal');
-      const gameCompletion = document.getElementById('gameCompletion');
-      const attemptsLeft = document.getElementById('attemptsLeft');
-      const submitBtn = document.getElementById('submitBtn');
-      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      if (!selectedAnswer) {
+        feedback.textContent = 'Please select an option first.';
+        feedback.className = 'wrong';
+        return;
+      }
 
       attempts++;
 
-      const correctAnswers = ['jstor', 'medweb'];
-      const wrongAnswers = ['mla'];
-
-      // Check if both correct answers are selected and no wrong answers
-      const hasAllCorrect = correctAnswers.every(answer => selectedAnswers.includes(answer));
-      const hasAnyWrong = wrongAnswers.some(answer => selectedAnswers.includes(answer));
-
-      if (hasAllCorrect && !hasAnyWrong && selectedAnswers.length === 2) {
-        feedback.innerHTML = "✅ Correct!";
+      if (selectedAnswer === 'chatgpt') {
+        feedback.textContent = '✅ Correct!';
         feedback.className = 'correct';
         codeSection.style.display = 'block';
         gameCompletion.style.display = 'block';
-        attemptsLeft.innerHTML = '';
-        // Disable all checkboxes and submit button after correct answer
-        checkboxes.forEach(cb => cb.disabled = true);
-        submitBtn.disabled = true;
+        attemptsLeft.textContent = '';
+        disableAll();
       } else {
-        if (attempts === 1) {
-          feedback.innerHTML = "❌ Incorrect. Try again.";
+        if (attempts < maxAttempts) {
+          feedback.textContent = '❌ Incorrect. Try again.';
           feedback.className = 'wrong';
-          attemptsLeft.innerHTML = "1 remaining attempt";
+          attemptsLeft.textContent = `${maxAttempts - attempts} remaining attempt`;
         } else {
-          feedback.innerHTML = "❌ Sorry, try your chance again :(";
+          feedback.textContent = '❌ Sorry, try your chance again :(';
           feedback.className = 'wrong';
-          attemptsLeft.innerHTML = '';
+          attemptsLeft.textContent = '';
           codeSection.style.display = 'none';
-          // Disable all checkboxes and submit button after max attempts
-          checkboxes.forEach(cb => cb.disabled = true);
-          submitBtn.disabled = true;
+          disableAll();
         }
       }
     }
+    // expose for inline onclick
+    window.checkAnswers = checkAnswers;
   </script>
 </body>
 </html>
-
-
